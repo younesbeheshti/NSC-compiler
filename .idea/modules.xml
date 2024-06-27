@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="ProjectModuleManager">
+    <modules>
+      <module fileurl="file://$PROJECT_DIR$/NotSimpleCalculator/NotSimpleCalculator.iml" filepath="$PROJECT_DIR$/NotSimpleCalculator/NotSimpleCalculator.iml" />
+      <module fileurl="file://$PROJECT_DIR$/compoiler.iml" filepath="$PROJECT_DIR$/compoiler.iml" />
+    </modules>
+  </component>
+</project>
