@@ -9,46 +9,73 @@ import javax.swing.*;
 
 public class Main {
 
-
-
         static JFrame f;
         static JButton b;
-        static JTextArea jt;
-        static JLabel l;
+        static JTextArea jt, jt1;
 
+        public static class Text implements ActionListener {
 
-        text(){}
+                public Text() {}
 
+                @Override
+                public void actionPerformed(ActionEvent e) {
+                        String s = e.getActionCommand();
+                        if (s.equals("RUN")) {
+                                String inputCode = jt.getText();
+                                if (inputCode.isEmpty()) {
+                                        jt1.setText("Nothing Entered...");
+                                        return;
+                                }
+                                try {
+                                        NotSimpleCalculatorLexer lexer = new NotSimpleCalculatorLexer(CharStreams.fromString(inputCode));
+                                        CommonTokenStream tokens = new CommonTokenStream(lexer);
+                                        NotSimpleCalculatorParser parser = new NotSimpleCalculatorParser(tokens);
+                                        NotSimpleCalculatorParser.ProgramContext tree = parser.program();
+
+                                        MyVisitor visitor = new MyVisitor();
+                                        String result = visitor.visit(tree);
+                                        jt1.setText("\n"+" "+result);
+                                } catch (Exception ex) {
+                                        jt1.setText("Error in processing the input.");
+                                }
+                        }
+                }
+        }
 
         public static void main(String[] args) {
 
-
                 f = new JFrame("NSC-compiler");
                 b = new JButton("RUN");
-                l = new JLabel("Nothing Entered...");
-                text te = new text();
+                Text te = new Text();
 
-                b.addActionListner(te);
+                b.addActionListener(te);
 
-                jt = new JTextArea(10, 10);
+                jt = new JTextArea(15, 15);
+                jt1 = new JTextArea(10, 10);
+
+                jt.setBackground(Color.decode("#151a24"));
+                jt.setForeground(Color.decode("#FFFFFF"));
+                jt.setFont(new Font("Arial", Font.PLAIN, 15));
+
+                jt1.setBackground(Color.decode("#151a24"));
+                jt1.setForeground(Color.decode("#FFFFFF"));
+                jt1.setFont(new Font("Arial", Font.PLAIN, 14));
+
+
+                jt1.setEditable(false);
 
                 JPanel p = new JPanel();
+                p.setLayout(new BorderLayout());
 
-                p.add(jt);
-                p.add(b);
-                p.add(l);
+                p.add(new JScrollPane(jt), BorderLayout.CENTER);
+                p.add(b, BorderLayout.NORTH);
+                p.add(jt1, BorderLayout.SOUTH);
 
                 f.add(p);
 
-                f.setSize(300, 300);
-
-                f.show;
-
-                
-
-
-
-
+                f.setSize(600, 500);
+                f.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+                f.setVisible(true);
 
 
                 // NotSimpleCalculatorLexer lexer = new NotSimpleCalculatorLexer(CharStreams.fromString("a = 2 + 3 * 4;\n" +
@@ -68,44 +95,31 @@ public class Main {
                 //         "print \"f is \", f;\n" +
                 //         "a = 2 * 2 ^ (3 * 3);\n" +
                 //         "print \"a is \", a;"));
-//                NotSimpleCalculatorLexer lexer = new NotSimpleCalculatorLexer(CharStreams.fromString("loop a:4 do\n" +
-//                        "begin\n" +
-//                        "if a % 2 == 1 then\n" +
-//                        "print\"a is odd: \", a;\n" +
-//                        "else print \"a is even: \", a;\n" +
-//                        "end"));
-//                NotSimpleCalculatorLexer lexer = new NotSimpleCalculatorLexer(CharStreams.fromString("for a of 1 to 4 do\n" +
-//                        "begin\n" +
-//                        "if a % 2 == 1 then\n" +
-//                        "print \"a is odd: \", a;\n" +
-//                        "end"));
-//                NotSimpleCalculatorLexer lexer = new NotSimpleCalculatorLexer((CharStreams.fromString("a = 4;\n" +
-//                        "while a > 0 do\n" +
-//                        "begin\n" +
-//                        "if a % 2 == 1 then\n" +
-//                        "print \"a is odd: \", a;\n" +
-//                        "else print \"a is even: \", a;\n" +
-//                        "a = a - 1;\n" +
-//                        "end")));
+                // NotSimpleCalculatorLexer lexer = new NotSimpleCalculatorLexer(CharStreams.fromString("loop a:4 do\n" +
+                //         "begin\n" +
+                //         "if a % 2 == 1 then\n" +
+                //         "print\"a is odd: \", a;\n" +
+                //         "else print \"a is even: \", a;\n" +
+                //         "end"));
+                // NotSimpleCalculatorLexer lexer = new NotSimpleCalculatorLexer(CharStreams.fromString("for a of 1 to 4 do\n" +
+                //         "begin\n" +
+                //         "if a % 2 == 1 then\n" +
+                //         "print \"a is odd: \", a;\n" +
+                //         "end"));
+                // NotSimpleCalculatorLexer lexer = new NotSimpleCalculatorLexer((CharStreams.fromString("a = 4;\n" +
+                //         "while a > 0 do\n" +
+                //         "begin\n" +
+                //         "if a % 2 == 1 then\n" +
+                //         "print \"a is odd: \", a;\n" +
+                //         "else print \"a is even: \", a;\n" +
+                //         "a = a - 1;\n" +
+                //         "end")));
                 // CommonTokenStream tokens = new CommonTokenStream(lexer);
                 // NotSimpleCalculatorParser parser = new NotSimpleCalculatorParser(tokens);
                 // NotSimpleCalculatorParser.ProgramContext tree = parser.program();
 
                 // MyVisitor visitor = new MyVisitor();
                 // visitor.visit(tree);
-        }
 
-        public void actoinPerformed(ActionEvent e) {
-                String s = e.getActionCommand();
-                if(s.equals("RUN")) {
-                        NotSimpleCalculatorLexer lexer = new NotSimpleCalculatorLexer(CharStreams.fromString(jt.getText()));
-                        CommonTokenStream tokens = new CommonTokenStream(lexer);
-                        NotSimpleCalculatorParser parser = new NotSimpleCalculatorParser(tokens);
-                        NotSimpleCalculatorParser.ProgramContext tree = parser.program();
-
-                        MyVisitor visitor = new MyVisitor();
-                        // visitor.visit(tree);
-                        l.setText(visitor.visit(tree));
-                }
         }
 }
